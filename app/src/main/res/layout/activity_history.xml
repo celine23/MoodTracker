@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.lin.celine.moodtracker.controller.HistoryActivity"
+    >
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorAccent"
+    android:layout_weight="1"
+    >
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="One week ago"/>
+  <ImageButton
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/ic_comment_black"
+      android:background="@color/colorAccent"
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"/>
+</RelativeLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#fff9ec4f"
+      android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Six days ago"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_comment_black"
+        android:background="#fff9ec4f"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#ff9b9b9b"
+      android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Five days ago"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_comment_black"
+        android:background="#ff9b9b9b"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#ffb8e986"
+      android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Four days ago"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_comment_black"
+        android:background="#ffb8e986"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+  </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="#a5468ad9"
+      android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Three days ago"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_comment_black"
+        android:background="#a5468ad9"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+  </RelativeLayout> <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#ffde3c50"
+    android:layout_weight="1">
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="Two days ago"/>
+  <ImageButton
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:src="@drawable/ic_comment_black"
+      android:background="#ffde3c50"
+      android:layout_centerVertical="true"
+      android:layout_alignParentRight="true"/>
+</RelativeLayout>
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/colorPrimary"
+      android:layout_weight="1">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yesturday"/>
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_comment_black"
+        android:background="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+  </RelativeLayout>
+</LinearLayout>
+
+
