@@ -5,11 +5,10 @@ package com.lin.celine.moodtracker.model;
  */
 
 public class MoodEntry {
-    public String comment;
+    private String comment;
     private String date;
     private Mood mood;
 
-    //Return
     public String getComment() {
         return comment;
     }

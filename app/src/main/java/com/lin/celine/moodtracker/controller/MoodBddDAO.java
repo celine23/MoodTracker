@@ -13,26 +13,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static com.lin.celine.moodtracker.controller.SQLite.COMMENT;
+import static com.lin.celine.moodtracker.controller.SQLite.DATE;
+import static com.lin.celine.moodtracker.controller.SQLite.MOOD;
+import static com.lin.celine.moodtracker.controller.SQLite.TABLE_MOOD;
+
 /**
  * Created by celine on 30/03/2018.
  */
 
 public class MoodBddDAO {
 
+    static MoodBddDAO newInstance() {
+        MoodBddDAO moodBddDAO = new MoodBddDAO(null);
+        return moodBddDAO;
+    }
+
     protected final static int VERSION = 1;
     // Le nom du fichier qui représente ma base
     protected final static String KEY_NOM = "database.db";
     protected SQLiteDatabase bdd = null;
     protected SQLite sqLite = null;
-    public static final String TABLE_MOOD = "mood";
-    public static final String KEY = "id";
-    public static final String COMMENT = "comment";
-    public static final String DATE = "date";
-    public static final String MOOD = "mood";
-
-    public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_MOOD + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MOOD + " TEXT," + COMMENT + " TEXT, " + DATE + " DATE);";
-
-    public static final String TABLE_DROP = "DROP TABLE IF EXISTS " + TABLE_MOOD + ";";
 
     public MoodBddDAO(Context pContext) {
         this.sqLite = new SQLite(pContext, KEY_NOM, null, VERSION);
@@ -52,37 +53,37 @@ public class MoodBddDAO {
         return bdd;
     }
 
-   public long insertMood(MoodEntry comment, Date date, Mood mood) {
-        //long insert(String table, String nullColumnHack, ContentValues values){
-        // pour insérer des données dans la base
-        ContentValues values = new ContentValues();
-        //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
-        values.put(DATE, date.getDate());
-        values.put(COMMENT, comment.getComment());
-        values.put(MOOD, mood.name());
-        //on insère l'objet dans la BDD via le ContentValues
-        return bdd.insert(String.valueOf(TABLE_MOOD), null, values);
-    }
-
-    public long insert(Mood mood) {
+    public long insertMood(Mood mood) {
         ContentValues values = new ContentValues();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
-        values.put(MOOD, mood.name());
+        values.put(MOOD, (mood).name());
         values.put(DATE, sdf.format(new Date(System.currentTimeMillis())));
 
+        //bdd.insert(String table, String nullColumnHack, ContentValues values)
+        return bdd.insert(String.valueOf(TABLE_MOOD), null, values);
+    }
+
+    public long insert(Mood mood, String comment) {
+        ContentValues values = new ContentValues();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        //on lui ajoute une valeur associée à une clé (qui est le nom de la colonne dans laquelle on veut mettre la valeur)
+        values.put(MOOD, (mood).name());
+        values.put(COMMENT, comment);
+        values.put(DATE, sdf.format(new Date(System.currentTimeMillis())));
+        //bdd.insert(String table, String nullColumnHack, ContentValues values)
         return bdd.insert(String.valueOf(TABLE_MOOD), null, values);
     }
 
     //mise à jour
-    public int updateMood(int id, MoodEntry mood) {
+    public int updateMood(int id, Mood mood) {
         //La mise à jour d'un mood dans la BDD fonctionne plus ou moins comme une insertion
         //il faut simplement préciser quel mood on doit mettre à jour grâce à l'ID
         ContentValues values = new ContentValues();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         values.put(DATE, sdf.format(new Date(System.currentTimeMillis())));
-        values.put(COMMENT, mood.getComment());
-        values.put(MOOD, mood.getMood().name());
+       // values.put(COMMENT, comment);
+        values.put(MOOD, mood.name());
         return bdd.update(String.valueOf(TABLE_MOOD), values, MOOD + " = " + id, null);
     }
 
@@ -91,40 +92,49 @@ public class MoodBddDAO {
         return bdd.delete(String.valueOf(TABLE_MOOD), MOOD + " = " + id, null);
     }
 
+    //Récupérer la mood par rapport à la date
     public MoodEntry getMoodWithDate(String date) {
 
-        //Récupère dans un Cursor les valeurs correspondant à un mood contenu dans la BDD
+        //Récupère les valeurs comment,date,mood dans la TABLE_MOOD
+        //Cursor fournit un accès en lecture-écriture.
+        //interroger l'URL de données
+        //Les curseurs sont des objets qui contiennent les résultats d'une recherche
         Cursor c = bdd.query(String.valueOf(TABLE_MOOD), new String[]{COMMENT, DATE, MOOD}, DATE + " LIKE \"" + date + "\"", null, null, null, null);
 
-        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
+        //se placer au 1er élément
+        if (c.moveToFirst()) {
+
+            // parametre dans MoodEntry
+            MoodEntry moodEntry = new MoodEntry();
+
+            //Récupérer le contenu d'une colonne
+            String mood = c.getString(1);
+            String commentaire = c.getString(2);
+            String mDate = c.getString(3);
+
+            //Log pour s'assurer que la colonne est bien récupérer
+            Log.v("Mood", mood);
+            Log.v("Commentaire", commentaire);
+            Log.v("Date", mDate);
+
+            //valueOf() peut convertir une chaine en objet Enum
+            Mood moodMood = Mood.valueOf(mood);
+
+            moodEntry.setMood(moodMood);
+            moodEntry.setComment(commentaire);
+            moodEntry.setDate(mDate);
+
+            //Log pour s'assurer le bon fonctionnements des infos de la mood entry.
+            Log.v("Mood", String.valueOf(moodMood));
+            Log.v("Commentaire", commentaire);
+            Log.v("Date", mDate);
+
+            return moodEntry;
         }
 
-        //Récupérer le contenu d'une colonne
-        String mood = c.getString(1);
-        String commentaire = c.getString(2);
-        String mDate = c.getString(3);
-
-        Log.v("Mood", mood);
-        Log.v("Commentaire", commentaire);
-        Log.v("Date", mDate);
-
-        //valueOf() peut convertir une chaine en objet Enum
-        Mood moodMood = Mood.valueOf(mood);
-
-        // parametre dans MoodEntry
-        MoodEntry moodEntry = new MoodEntry();
-
-        moodEntry.setMood(moodMood);
-        moodEntry.setComment(commentaire);
-        moodEntry.setDate(mDate);
-
-        Log.v("Mood", String.valueOf(moodMood));
-        Log.v("Commentaire",commentaire);
-        Log.v("Date",mDate);
-        
         c.close();
 
-        return moodEntry;
+        return getMoodWithDate(date);
     }
 
     //mood à ajouter à la base
@@ -145,7 +155,7 @@ public class MoodBddDAO {
         //Lire la mood depuis la base de données
         String mdString = curs.getString(curs.getColumnIndex(MOOD));
         //LOG
-        Log.v("mood",mdString);
+        Log.v("mood", mdString);
 
         //lire la date depuis la base de données
         String tmpString = curs.getString(curs.getColumnIndex(DATE));
@@ -153,8 +163,7 @@ public class MoodBddDAO {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateVariable = sdf.parse(tmpString);
-            //LOG
-            Log.v("date",tmpString);
+            Log.v("date", tmpString);
         } catch (ParseException e) {
             e.printStackTrace();
         }

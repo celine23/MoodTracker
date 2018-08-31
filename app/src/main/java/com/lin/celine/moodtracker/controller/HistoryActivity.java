@@ -1,20 +1,32 @@
 package com.lin.celine.moodtracker.controller;
 
-import android.content.Context;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.annotation.TransitionRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.lin.celine.moodtracker.R;
 import com.lin.celine.moodtracker.model.Mood;
 import com.lin.celine.moodtracker.model.MoodEntry;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
+import static com.lin.celine.moodtracker.R.layout.mood;
 import static com.lin.celine.moodtracker.model.Mood.BAD;
 import static com.lin.celine.moodtracker.model.Mood.GOOD;
 import static com.lin.celine.moodtracker.model.Mood.GREAT;
@@ -44,8 +56,7 @@ public class HistoryActivity extends AppCompatActivity {
     public RelativeLayout mThree;
     public RelativeLayout mTwo;
     public RelativeLayout mOne;
-    private int width;
-    private int height;
+    public LinearLayout layout;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -75,6 +86,7 @@ public class HistoryActivity extends AppCompatActivity {
         mThree = (RelativeLayout) findViewById(R.id.three);
         mTwo = (RelativeLayout) findViewById(R.id.two);
         mOne = (RelativeLayout) findViewById(R.id.one);
+        layout = (LinearLayout) findViewById(R.id.linear);
 
         //crée les nouveau moodEntry
         MoodEntry moodEntry1 = new MoodEntry();
@@ -96,40 +108,9 @@ public class HistoryActivity extends AppCompatActivity {
         displayMood(moodEntry4.getMood(), mFour);
         displayMood(moodEntry5.getMood(), mFive);
 
-        mImageButton1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //      Toast.makeText(, Toast.LENGTH_LONG).show();
-            }
-        });
-        mImageButton2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-        mImageButton3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-        mImageButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-        mImageButton5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-        mImageButton6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
     }
 
-    //switch pour définir les couleurs et la taille du layout selon le mood
+    //switch pour définir les couleurs et la largueur du layout selon le mood
     private void displayMood(Mood mood, RelativeLayout layout) {
         Display display = getWindowManager().getDefaultDisplay();
         int width = 0;
@@ -159,15 +140,67 @@ public class HistoryActivity extends AppCompatActivity {
         LinearLayout.LayoutParams parms = (LinearLayout.LayoutParams) layout.getLayoutParams();
         parms.width = width;
         layout.setLayoutParams(parms);
-        layout.setVisibility(View.VISIBLE);
+       // layout.setVisibility(View.VISIBLE);
     }
 
-    void onOpen(SQLiteDatabase db) {
-    }
+    MoodBddDAO moodBddDAO = new MoodBddDAO(this) {
 
-    SQLiteDatabase getReadableDatabase() {
-        return null;
-    }
+        public MoodEntry getMood(String date) {
 
-    void close(){}
+            //fournit le système de calendrier standard
+            Calendar cal = GregorianCalendar.getInstance();
+            //Adopte le format que l'on souhaite
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            //Crée une String pour que le calendrier récupère la date avec le format définit
+            final String formatedDate = simpleDateFormat.format(cal.getTime());
+
+            displayMood(getMoodWithDate(formatedDate).getMood(), mOne);
+
+            Log.v("getMood","yes");
+            displayMood(getMoodWithDate(formatedDate).getMood(), mTwo);
+
+            //le mettre dans les imageButton
+            mImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getMoodWithDate(formatedDate).getComment();
+                    Log.d("getComment","yes");
+                }
+            });
+            mImageButton1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                 //  Toast.makeText(getMoodWithDate(date).getComment(),(c), Toast.LENGTH_LONG).show();
+                }
+            });
+            mImageButton2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            mImageButton3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            mImageButton4.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            mImageButton5.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+            mImageButton6.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                }
+            });
+
+            return super.getMoodWithDate(date);
+        }
+    };
+
 }

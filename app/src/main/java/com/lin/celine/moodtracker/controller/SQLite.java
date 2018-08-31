@@ -2,24 +2,26 @@ package com.lin.celine.moodtracker.controller;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Created by celine on 30/03/2018.
  */
-
+//défini la table qui sera produite lors de l'instanciation.
 public class SQLite extends SQLiteOpenHelper {
 
-    private static final String mood_key = "TABLE MOOD";
-    private static final String mood_comment = "COMMENT";
-    private static final String mood_date = "DATE";
-    private static final String mood_mood = "MOOD";
+    public static final String TABLE_MOOD = "mood";
+    public static final String KEY = "id";
+    public static final String COMMENT = "comment";
+    public static final String DATE = "date";
+    public static final String MOOD = "mood";
 
-
-    private static final String TABLE_MOOD = "TABLE MOOD " + mood_key + "("
-            + mood_comment + " INTEGER COMMENT, " + mood_date + " DATE"
-            + mood_mood + " MOOD)";
+    public static final String TABLE_CREATE = "CREATE TABLE " + TABLE_MOOD + " (" + KEY + " INTEGER PRIMARY KEY AUTOINCREMENT, " + MOOD + " TEXT," + COMMENT + " TEXT, " + DATE + " DATE);";
 
     public SQLite(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -27,26 +29,13 @@ public class SQLite extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(TABLE_MOOD);
+        sqLiteDatabase.execSQL(TABLE_CREATE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("table mood " + mood_key + ";");
+        sqLiteDatabase.execSQL("table mood " + KEY + ";");
         onCreate(sqLiteDatabase);
     }
 
-    public void insertValues(String mood, String comment, String date) {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        ContentValues values = new ContentValues();
-
-        values.put(mood_mood, mood);
-        values.put(mood_comment, comment);
-        values.put(mood_date, date);
-
-        db.insert(TABLE_MOOD, null, values);
-        db.close();
-
-    }
 }
